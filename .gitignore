@@ -6,3 +6,6 @@ datas/
 # node
 
 node_modules
+
+# cookie
+cookie.json

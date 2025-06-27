@@ -14,13 +14,25 @@ function Write-Log {
         [string]$Message
     )
     
-    $timestamp = Get-Date -Format "[yyyy-MM-dd HH:mm:ss]"
+    $timestamp = Get-Date -Format "[yyyy-MM-dd HH:mm:ss.fff]"
     $logMessage = "$timestamp $Message"
     
-    # コンソールに出力
-    Write-Host $logMessage
-    
-    # ファイルに追記
+    # ログレベルに応じて色を変更
+    if ($Message -match "^\[\w+\] ") {
+        $level = $Message -split "\s+"[1]
+        switch ($level) {
+            "[info]" { $color = "Green" }
+            "[warn]" { $color = "Yellow" }
+            "[error]" { $color = "Red" }
+            "[debug]" { $color = "Cyan" }
+            default { $color = "White" }
+        }
+        Write-Host $logMessage -ForegroundColor $color
+    } else {
+        Write-Host $logMessage
+    }
+
+    # ファイルに出力（色なし）
     Add-Content -Path $logFile -Value $logMessage -Encoding UTF8
 }
 
